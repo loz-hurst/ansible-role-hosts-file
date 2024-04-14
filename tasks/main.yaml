@@ -1,0 +1,44 @@
+---
+- name: Hostfile ipv4 entries are correct for hosts
+  become: true
+  ansible.builtin.lineinfile:
+    path: '{{ hosts_file_path }}'
+    line: "{{ item.ipv4.address }}\t{{ item.hostname }}{% if item.add_short_name | default(true) and '.' in item.hostname %}\t{{ item.hostname.split('.', 1) | first }}{% endif %}{% if 'aliases' in item.ipv4 %}\t{{ item.ipv4.aliases | join('\t') }}{% endif %}"
+    regexp: '^{{ item.ipv4.address }}\s'
+  loop: '{{ hosts_file_hosts }}'
+  when: "'ipv4' in item"
+- name: Hostfile ipv6 entries are correct for hosts
+  become: true
+  ansible.builtin.lineinfile:
+    path: '{{ hosts_file_path }}'
+    line: "{{ item.ipv6.address }}\t{{ item.hostname }}{% if item.add_short_name | default(true) and '.' in item.hostname %}\t{{ item.hostname.split('.', 1) | first }}{% endif %}{% if 'aliases' in item.ipv6 %}\t{{ item.ipv6.aliases | join('\t') }}{% endif %}"
+    regexp: '^{{ item.ipv6.address }}\s'
+  loop: '{{ hosts_file_hosts }}'
+  when: "'ipv6' in item"
+- name: No incorrect hosts for configured hostnames
+  become: true
+  ansible.builtin.lineinfile:
+    path: '{{ hosts_file_path }}'
+    regexp: '^(?!{{ valid_addresses | join("|") }})[^\s]+\s(?:.*\s)*(?:{{ item.hostname }}{% if item.add_short_name | default(true) and "." in item.hostname %}|{{ item.hostname.split(".", 1) | first }}{% endif %}{% if aliases | length > 0 %}|{{ aliases | join("|") }}{% endif %})(\s|$)'
+    state: absent
+  loop: '{{ hosts_file_hosts }}'
+  vars:
+    valid_addresses: >-
+      {{
+        item
+        | dict2items
+        | selectattr('key', 'in', ['ipv4', 'ipv6'])
+        | map(attribute='value')
+        | map(attribute='address')
+      }}
+    aliases: >-
+      {{
+        item
+        | dict2items
+        | selectattr('key', 'in', ['ipv4', 'ipv6'])
+        | map(attribute='value')
+        | selectattr('aliases', 'defined')
+        | map(attribute='aliases')
+        | flatten
+      }}
+...

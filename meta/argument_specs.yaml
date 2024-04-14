@@ -1,0 +1,60 @@
+---
+argument_specs:
+  main:
+    short_description: Configures host file entries
+    author: Laurence Alexander Hurst
+    options:
+      hosts_file_path:
+        description: The path of the hosts file to manage
+        type: str
+        default: >-
+          {%- if ansible_facts.system == 'Linux' -%}
+            /etc/hosts
+          {%- elif ansible_facts.system == 'Win32NT' -%}
+            {{ ansible_facts.SystemRoot }}\\System32\drivers\etc\hosts
+          {%- elif ansible_facts.system == 'Darwin' -%}
+            /private/etc/hosts
+          {%- endif -%}
+      hosts_file_hosts:
+        description: List of entries for the hosts file
+        type: list
+        required: true
+        elements: dict
+        required_one_of:
+          - ['ipv4', 'ipv6']
+        options:
+          hostname:
+            description: Hostname to map to these IP addresses
+            required: true
+            type: str
+          add_short_name:
+            description: If `hostname` is qualified, whether to add the short name as an alias
+            type: bool
+            default: true
+          ipv4:
+            description: IP version 4 specific options
+            type: dict
+            options:
+              address:
+                description: IPv4 address for this hostname to resolve to
+                type: str
+                required: true
+              aliases:
+                description: Aliases specific to the IPv4 address
+                type: list
+                required: false
+                elements: str
+          ipv6:
+            description: IP version 6 specific options
+            type: dict
+            options:
+              address:
+                description: IPv6 address for this hostname to resolve to
+                type: str
+                required: true
+              aliases:
+                description: Aliases specific to the IPv6 address
+                type: list
+                required: false
+                elements: str
+...
