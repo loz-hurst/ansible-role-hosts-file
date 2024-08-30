@@ -1,0 +1,9 @@
+---
+galaxy_info:
+  role_name: hosts_file
+  author: Laurence Alexander Hurst
+  description: Ansible role for managing hosts files on a variety of operating systems
+  license: GPLv3
+  # Not been tested on anything prior to this - may work but YMMV
+  min_ansible_version: 2.16.3
+...
