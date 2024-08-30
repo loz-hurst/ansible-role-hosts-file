@@ -1,4 +1,4 @@
-# ansible-role-hosts-file
+# ansible-role-hosts_file
 
 Ansible role for managing hosts files on a variety of operating systems
 
