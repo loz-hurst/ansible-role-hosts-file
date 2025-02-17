@@ -25,7 +25,7 @@ argument_specs:
           {%- if ansible_facts.system == 'Linux' -%}
             /etc/hosts
           {%- elif ansible_facts.system == 'Win32NT' -%}
-            {{ ansible_facts.SystemRoot }}\\System32\drivers\etc\hosts
+            {{ ansible_facts.env.SystemRoot }}\\System32\drivers\etc\hosts
           {%- elif ansible_facts.system == 'Darwin' -%}
             /private/etc/hosts
           {%- endif -%}
