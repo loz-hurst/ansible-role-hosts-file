@@ -4,7 +4,7 @@ Ansible role for managing hosts files on a variety of operating systems
 
 ## Licence
 
-Copyright 2024 Laurence Alexander Hurst
+Copyright 2024-2025 Laurence Alexander Hurst
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
