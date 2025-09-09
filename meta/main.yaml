@@ -20,4 +20,6 @@ galaxy_info:
   license: GPLv3
   # Not been tested on anything prior to this - may work but YMMV
   min_ansible_version: 2.16.3
+  repository: https://github.com/loz-hurst/ansible-role-hosts_file.git
+dependencies: []
 ...
